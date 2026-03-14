@@ -43,6 +43,49 @@ Data Layer
 
 ---
 
+## Tech Stack
+
+### Backend
+| Layer        | Technology                                      |
+|--------------|-------------------------------------------------|
+| Language     | Java 17+                                        |
+| Framework    | Spring Boot, Spring Security, Spring Cloud      |
+| ORM          | Hibernate, Spring Data JPA                      |
+
+### Databases
+| Role         | Technology     |
+|--------------|----------------|
+| Primary DB   | PostgreSQL      |
+| Caching      | Redis           |
+| Search       | Elasticsearch   |
+| Vector DB    | ChromaDB        |
+
+### Messaging
+| Role             | Technology    |
+|------------------|---------------|
+| Event Streaming  | Apache Kafka  |
+
+### AI Stack
+| Role             | Technology                                          |
+|------------------|-----------------------------------------------------|
+| Models           | Llama 3, Mistral 7B, DistilBERT (Hugging Face)      |
+| Libraries        | Transformers, LangChain, Sentence Transformers      |
+
+### DevOps
+| Role             | Technology                          |
+|------------------|-------------------------------------|
+| Containerization | Docker, Docker Compose              |
+| Orchestration    | Kubernetes                          |
+| CI/CD            | GitHub Actions                      |
+
+### Monitoring
+| Role             | Technology                  |
+|------------------|-----------------------------|
+| Metrics          | Prometheus, Grafana         |
+| Logging          | ELK Stack                   |
+
+---
+
 ## Project Structure
 
 ```
@@ -63,5 +106,24 @@ Data Layer
 │   ├── redis/
 │   ├── elasticsearch/
 │   └── chromadb/
+├── monitoring/
+│   ├── prometheus/
+│   └── grafana/
+├── k8s/                       # Kubernetes manifests
+├── .github/workflows/         # GitHub Actions CI/CD
 └── docs/
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Docker & Docker Compose
+- Java 17+
+- Python 3.10+ (for AI service)
+
+### Run Infrastructure Locally
+```bash
+docker-compose up -d
 ```
