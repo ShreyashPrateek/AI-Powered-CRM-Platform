@@ -1,5 +1,27 @@
 services:
 
+  # ─── API Gateway ──────────────────────────────────────────
+  api-gateway:
+    build: ./api-gateway
+    container_name: crm-api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      REDIS_HOST: redis
+      JWT_SECRET: ${JWT_SECRET:-crm-super-secret-key-must-be-at-least-32-chars!!}
+      AUTH_SERVICE_URL: http://auth-service:8081
+      USER_SERVICE_URL: http://user-service:8082
+      LEAD_SERVICE_URL: http://lead-service:8083
+      DEAL_SERVICE_URL: http://deal-service:8084
+      EMAIL_SERVICE_URL: http://email-service:8085
+      NOTIFICATION_SERVICE_URL: http://notification-service:8086
+      ANALYTICS_SERVICE_URL: http://analytics-service:8087
+      AI_SERVICE_URL: http://ai-service:8088
+    depends_on:
+      - redis
+    networks:
+      - crm-network
+
   # ─── PostgreSQL ───────────────────────────────────────────
   postgres:
     image: postgres:16
@@ -12,6 +34,8 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - crm-network
 
   # ─── Redis ────────────────────────────────────────────────
   redis:
@@ -19,6 +43,8 @@ services:
     container_name: crm-redis
     ports:
       - "6379:6379"
+    networks:
+      - crm-network
 
   # ─── Elasticsearch ────────────────────────────────────────
   elasticsearch:
@@ -32,6 +58,8 @@ services:
       - "9200:9200"
     volumes:
       - es_data:/usr/share/elasticsearch/data
+    networks:
+      - crm-network
 
   # ─── Kibana ───────────────────────────────────────────────
   kibana:
@@ -41,6 +69,8 @@ services:
       - "5601:5601"
     depends_on:
       - elasticsearch
+    networks:
+      - crm-network
 
   # ─── ChromaDB ─────────────────────────────────────────────
   chromadb:
@@ -50,6 +80,8 @@ services:
       - "8000:8000"
     volumes:
       - chroma_data:/chroma/chroma
+    networks:
+      - crm-network
 
   # ─── Kafka + Zookeeper ────────────────────────────────────
   zookeeper:
@@ -57,6 +89,8 @@ services:
     container_name: crm-zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - crm-network
 
   kafka:
     image: confluentinc/cp-kafka:7.6.0
@@ -70,6 +104,8 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - crm-network
 
   # ─── Prometheus ───────────────────────────────────────────
   prometheus:
@@ -79,6 +115,8 @@ services:
       - "9090:9090"
     volumes:
       - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - crm-network
 
   # ─── Grafana ──────────────────────────────────────────────
   grafana:
@@ -90,6 +128,12 @@ services:
       - prometheus
     volumes:
       - grafana_data:/var/lib/grafana
+    networks:
+      - crm-network
+
+networks:
+  crm-network:
+    driver: bridge
 
 volumes:
   postgres_data:
