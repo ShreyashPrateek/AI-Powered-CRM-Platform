@@ -22,6 +22,27 @@ services:
     networks:
       - crm-network
 
+  # ─── Auth Service ──────────────────────────────────────────
+  auth-service:
+    build: ./services/auth-service
+    container_name: crm-auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      DB_HOST: postgres
+      DB_NAME: crm_db
+      DB_USER: crm_user
+      DB_PASS: crm_pass
+      REDIS_HOST: redis
+      KAFKA_BOOTSTRAP: kafka:9092
+      JWT_SECRET: ${JWT_SECRET:-crm-super-secret-key-must-be-at-least-32-chars!!}
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+    networks:
+      - crm-network
+
   # ─── PostgreSQL ───────────────────────────────────────────
   postgres:
     image: postgres:16
