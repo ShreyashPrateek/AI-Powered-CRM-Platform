@@ -60,7 +60,7 @@ public class JwtUtil {
             extractClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            log.warn("Invalid JWT: {}", e.getMessage());
+            log.warn("Invalid JWT: {}", e.getMessage(), e);
             return false;
         }
     }

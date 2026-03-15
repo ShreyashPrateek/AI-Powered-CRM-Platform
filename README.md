@@ -48,7 +48,7 @@ Data Layer
 ### Backend
 | Layer        | Technology                                      |
 |--------------|-------------------------------------------------|
-| Language     | Java 17+                                        |
+| Language     | Java 21+                                        |
 | Framework    | Spring Boot, Spring Security, Spring Cloud      |
 | ORM          | Hibernate, Spring Data JPA                      |
 
@@ -120,7 +120,7 @@ Data Layer
 
 ### Prerequisites
 - Docker & Docker Compose
-- Java 17+
+- Java 21+
 - Python 3.10+ (for AI service)
 
 ### Run Infrastructure Locally

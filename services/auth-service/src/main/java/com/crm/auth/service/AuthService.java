@@ -52,7 +52,7 @@ public class AuthService {
                 .build();
 
         userRepository.save(user);
-        log.info("Registered new user: {}", user.getEmail());
+        log.info("Registered new user with id: {}", user.getId());
 
         kafkaTemplate.send("auth.user.registered", Map.of(
                 "userId", user.getId(),
@@ -70,7 +70,7 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        log.info("User logged in: {}", user.getEmail());
+        log.info("User logged in with id: {}", user.getId());
         kafkaTemplate.send("auth.user.login", Map.of("email", user.getEmail()));
 
         return buildAuthResponse(user);
@@ -100,7 +100,7 @@ public class AuthService {
     public void logout(String refreshToken) {
         if (jwtUtil.isValid(refreshToken)) {
             blacklist(refreshToken);
-            log.info("Logged out user: {}", jwtUtil.extractEmail(refreshToken));
+            log.info("User logged out successfully");
         }
     }
 
