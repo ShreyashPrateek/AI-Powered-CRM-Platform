@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${subject}">Campaign Email</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+        .header { background: #1a73e8; padding: 24px 32px; }
+        .header h1 { color: #fff; margin: 0; font-size: 22px; }
+        .body { padding: 32px; color: #333; line-height: 1.6; }
+        .footer { background: #f4f4f4; padding: 16px 32px; font-size: 12px; color: #888; text-align: center; }
+        .btn { display: inline-block; margin-top: 24px; padding: 12px 28px; background: #1a73e8; color: #fff; text-decoration: none; border-radius: 4px; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1 th:text="${campaignName}">Campaign Name</h1>
+    </div>
+    <div class="body">
+        <p>Hi <span th:text="${recipientName ?: 'there'}">there</span>,</p>
+        <div th:utext="${body}">Email body content goes here.</div>
+        <a th:if="${ctaUrl}" th:href="${ctaUrl}" class="btn" th:text="${ctaLabel ?: 'Learn More'}">Learn More</a>
+    </div>
+    <div class="footer">
+        <p>You are receiving this email because you are a valued contact of our CRM system.</p>
+        <p>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2025</span> CRM Platform. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>

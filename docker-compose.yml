@@ -64,6 +64,31 @@ services:
     networks:
       - crm-network
 
+  # ─── Email Service ─────────────────────────────────────────
+  email-service:
+    build: ./services/email-service
+    container_name: crm-email-service
+    ports:
+      - "8085:8085"
+    environment:
+      DB_HOST: postgres
+      DB_NAME: crm_db
+      DB_USER: crm_user
+      DB_PASS: crm_pass
+      REDIS_HOST: redis
+      KAFKA_BOOTSTRAP: kafka:9092
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-noreply@crm.io}
+      SMTP_PASS: ${SMTP_PASS:-changeme}
+      AI_SERVICE_URL: http://ai-service:8088
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+    networks:
+      - crm-network
+
   # ─── Auth Service ──────────────────────────────────────────
   auth-service:
     build: ./services/auth-service

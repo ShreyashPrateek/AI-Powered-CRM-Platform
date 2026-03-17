@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Follow-Up Reminder</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+        .header { background: #34a853; padding: 24px 32px; }
+        .header h1 { color: #fff; margin: 0; font-size: 20px; }
+        .body { padding: 32px; color: #333; line-height: 1.6; }
+        .highlight { background: #f0faf4; border-left: 4px solid #34a853; padding: 12px 16px; margin: 16px 0; border-radius: 4px; }
+        .footer { background: #f4f4f4; padding: 16px 32px; font-size: 12px; color: #888; text-align: center; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>Follow-Up Reminder</h1>
+    </div>
+    <div class="body">
+        <p>Hi <span th:text="${leadName ?: 'there'}">there</span>,</p>
+        <div class="highlight">
+            <p th:utext="${body}">Follow-up message content.</p>
+        </div>
+        <p>If you have any questions or need assistance, feel free to reply to this email.</p>
+        <p>Best regards,<br/>The CRM Team</p>
+    </div>
+    <div class="footer">
+        <p>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2025</span> CRM Platform. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>
