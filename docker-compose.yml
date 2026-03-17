@@ -22,6 +22,48 @@ services:
     networks:
       - crm-network
 
+  # ─── User Service ──────────────────────────────────────────
+  user-service:
+    build: ./services/user-service
+    container_name: crm-user-service
+    ports:
+      - "8082:8082"
+    environment:
+      DB_HOST: postgres
+      DB_NAME: crm_db
+      DB_USER: crm_user
+      DB_PASS: crm_pass
+      REDIS_HOST: redis
+      KAFKA_BOOTSTRAP: kafka:9092
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+    networks:
+      - crm-network
+
+  # ─── Lead Service ─────────────────────────────────────────
+  lead-service:
+    build: ./services/lead-service
+    container_name: crm-lead-service
+    ports:
+      - "8083:8083"
+    environment:
+      DB_HOST: postgres
+      DB_NAME: crm_db
+      DB_USER: crm_user
+      DB_PASS: crm_pass
+      REDIS_HOST: redis
+      KAFKA_BOOTSTRAP: kafka:9092
+      ES_HOST: elasticsearch
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+      - elasticsearch
+    networks:
+      - crm-network
+
   # ─── Auth Service ──────────────────────────────────────────
   auth-service:
     build: ./services/auth-service
