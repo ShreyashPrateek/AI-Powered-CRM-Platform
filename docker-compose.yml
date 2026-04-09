@@ -240,6 +240,8 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
+      ai-service:
+        condition: service_healthy
     networks:
       - crm-network
 
@@ -296,6 +298,34 @@ services:
     networks:
       - crm-network
 
+  # ─── AI Service ───────────────────────────────────────────
+  ai-service:
+    build: ./services/ai-service
+    container_name: crm-ai-service
+    ports:
+      - "8088:8088"
+    environment:
+      CHROMA_HOST: chromadb
+      CHROMA_PORT: 8000
+      GENERATION_MODEL: ${GENERATION_MODEL:-microsoft/phi-2}
+      SENTIMENT_MODEL: distilbert-base-uncased-finetuned-sst-2-english
+      EMBEDDING_MODEL: sentence-transformers/all-MiniLM-L6-v2
+      DEVICE: ${DEVICE:-auto}
+      HF_CACHE_DIR: /tmp/hf_cache
+      LOG_LEVEL: INFO
+    volumes:
+      - hf_cache:/tmp/hf_cache
+    depends_on:
+      - chromadb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8088/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks:
+      - crm-network
+
   # ─── API Gateway ──────────────────────────────────────────
   api-gateway:
     build: ./api-gateway
@@ -324,6 +354,8 @@ services:
         condition: service_started
       deal-service:
         condition: service_started
+      ai-service:
+        condition: service_healthy
     networks:
       - crm-network
 
@@ -360,3 +392,4 @@ volumes:
   es_data:
   chroma_data:
   grafana_data:
+  hf_cache:
