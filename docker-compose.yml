@@ -12,6 +12,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U crm_user -d crm_db"]
       interval: 10s
@@ -83,7 +84,8 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ES_JAVA_OPTS=-Xms256m -Xmx256m
+      - bootstrap.memory_lock=false
     ports:
       - "9200:9200"
     volumes:
@@ -240,8 +242,6 @@ services:
         condition: service_healthy
       kafka:
         condition: service_healthy
-      ai-service:
-        condition: service_healthy
     networks:
       - crm-network
 
@@ -354,8 +354,6 @@ services:
         condition: service_started
       deal-service:
         condition: service_started
-      ai-service:
-        condition: service_healthy
     networks:
       - crm-network
 
@@ -375,11 +373,16 @@ services:
     image: grafana/grafana:latest
     container_name: crm-grafana
     ports:
-      - "3000:3000"
+      - "3001:3000"
     depends_on:
       - prometheus
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
     networks:
       - crm-network
 

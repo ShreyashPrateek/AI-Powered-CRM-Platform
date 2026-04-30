@@ -1,13 +1,11 @@
-import api from "./api";
+import api from './api';
+import { LoginRequest, RegisterRequest, AuthResponse } from '../types/auth.types';
 
-export const login = (form: { email: string; password: string }) =>
-  api.post("/api/auth/login", form).then((res) => res.data);
+export const login = (data: LoginRequest): Promise<AuthResponse> =>
+  api.post('/api/auth/login', data).then(r => r.data);
 
-export const register = (form: { email: string; password: string }) =>
-  api.post("/api/auth/register", form).then((res) => res.data);
+export const register = (data: RegisterRequest): Promise<AuthResponse> =>
+  api.post('/api/auth/register', data).then(r => r.data);
 
-export const refresh = (refreshToken: string) =>
-  api.post("/api/auth/refresh", { refreshToken }).then((res) => res.data);
-
-export const logout = (refreshToken: string) =>
-  api.post("/api/auth/logout", { refreshToken });
+export const logout = (refreshToken: string): Promise<void> =>
+  api.post('/api/auth/logout', { refreshToken }).then(() => undefined);

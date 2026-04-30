@@ -1,0 +1,62 @@
+# Elasticsearch index templates for CRM Platform
+# Apply with:
+#   curl -X PUT http://localhost:9200/_index_template/crm_leads -H 'Content-Type: application/json' -d @leads-template.json
+#   curl -X PUT http://localhost:9200/_index_template/crm_deals -H 'Content-Type: application/json' -d @deals-template.json
+
+# leads-template.json
+{
+  "index_patterns": ["crm_leads*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0,
+      "analysis": {
+        "analyzer": {
+          "crm_analyzer": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": ["lowercase", "asciifolding"]
+          }
+        }
+      }
+    },
+    "mappings": {
+      "properties": {
+        "id":             { "type": "keyword" },
+        "name":           { "type": "text", "analyzer": "crm_analyzer" },
+        "email":          { "type": "keyword" },
+        "phone":          { "type": "keyword" },
+        "company":        { "type": "text", "analyzer": "crm_analyzer" },
+        "industry":       { "type": "keyword" },
+        "source":         { "type": "keyword" },
+        "status":         { "type": "keyword" },
+        "assignedUserId": { "type": "long" },
+        "createdAt":      { "type": "date" }
+      }
+    }
+  }
+}
+
+# deals-template.json
+{
+  "index_patterns": ["crm_deals*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    },
+    "mappings": {
+      "properties": {
+        "id":                 { "type": "keyword" },
+        "title":              { "type": "text" },
+        "leadId":             { "type": "long" },
+        "value":              { "type": "double" },
+        "stage":              { "type": "keyword" },
+        "probability":        { "type": "integer" },
+        "expectedCloseDate":  { "type": "date" },
+        "ownerId":            { "type": "long" },
+        "createdAt":          { "type": "date" }
+      }
+    }
+  }
+}

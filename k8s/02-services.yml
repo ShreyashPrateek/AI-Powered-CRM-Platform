@@ -1,0 +1,417 @@
+---
+# ── Auth Service ──────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-auth-service
+  namespace: crm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crm-auth-service
+  template:
+    metadata:
+      labels:
+        app: crm-auth-service
+    spec:
+      containers:
+        - name: auth-service
+          image: ghcr.io/YOUR_ORG/crm-auth-service:latest
+          ports:
+            - containerPort: 8081
+          envFrom:
+            - configMapRef: { name: crm-config }
+            - secretRef: { name: crm-secrets }
+          readinessProbe:
+            httpGet: { path: /actuator/health, port: 8081 }
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 200m, memory: 256Mi }
+            limits:   { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-auth-service
+  namespace: crm
+spec:
+  selector:
+    app: crm-auth-service
+  ports:
+    - port: 8081
+---
+# ── User Service ──────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-user-service
+  namespace: crm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crm-user-service
+  template:
+    metadata:
+      labels:
+        app: crm-user-service
+    spec:
+      containers:
+        - name: user-service
+          image: ghcr.io/YOUR_ORG/crm-user-service:latest
+          ports:
+            - containerPort: 8082
+          envFrom:
+            - configMapRef: { name: crm-config }
+            - secretRef: { name: crm-secrets }
+          readinessProbe:
+            httpGet: { path: /actuator/health, port: 8082 }
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 200m, memory: 256Mi }
+            limits:   { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-user-service
+  namespace: crm
+spec:
+  selector:
+    app: crm-user-service
+  ports:
+    - port: 8082
+---
+# ── Lead Service ──────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-lead-service
+  namespace: crm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crm-lead-service
+  template:
+    metadata:
+      labels:
+        app: crm-lead-service
+    spec:
+      containers:
+        - name: lead-service
+          image: ghcr.io/YOUR_ORG/crm-lead-service:latest
+          ports:
+            - containerPort: 8083
+          envFrom:
+            - configMapRef: { name: crm-config }
+            - secretRef: { name: crm-secrets }
+          readinessProbe:
+            httpGet: { path: /actuator/health, port: 8083 }
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 200m, memory: 256Mi }
+            limits:   { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-lead-service
+  namespace: crm
+spec:
+  selector:
+    app: crm-lead-service
+  ports:
+    - port: 8083
+---
+# ── Deal Service ──────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-deal-service
+  namespace: crm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crm-deal-service
+  template:
+    metadata:
+      labels:
+        app: crm-deal-service
+    spec:
+      containers:
+        - name: deal-service
+          image: ghcr.io/YOUR_ORG/crm-deal-service:latest
+          ports:
+            - containerPort: 8084
+          envFrom:
+            - configMapRef: { name: crm-config }
+            - secretRef: { name: crm-secrets }
+          readinessProbe:
+            httpGet: { path: /actuator/health, port: 8084 }
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 200m, memory: 256Mi }
+            limits:   { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-deal-service
+  namespace: crm
+spec:
+  selector:
+    app: crm-deal-service
+  ports:
+    - port: 8084
+---
+# ── Email Service ─────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-email-service
+  namespace: crm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crm-email-service
+  template:
+    metadata:
+      labels:
+        app: crm-email-service
+    spec:
+      containers:
+        - name: email-service
+          image: ghcr.io/YOUR_ORG/crm-email-service:latest
+          ports:
+            - containerPort: 8085
+          envFrom:
+            - configMapRef: { name: crm-config }
+            - secretRef: { name: crm-secrets }
+          readinessProbe:
+            httpGet: { path: /actuator/health, port: 8085 }
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 200m, memory: 256Mi }
+            limits:   { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-email-service
+  namespace: crm
+spec:
+  selector:
+    app: crm-email-service
+  ports:
+    - port: 8085
+---
+# ── Notification Service ──────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-notification-service
+  namespace: crm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crm-notification-service
+  template:
+    metadata:
+      labels:
+        app: crm-notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: ghcr.io/YOUR_ORG/crm-notification-service:latest
+          ports:
+            - containerPort: 8086
+          envFrom:
+            - configMapRef: { name: crm-config }
+            - secretRef: { name: crm-secrets }
+          readinessProbe:
+            httpGet: { path: /actuator/health, port: 8086 }
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 200m, memory: 256Mi }
+            limits:   { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-notification-service
+  namespace: crm
+spec:
+  selector:
+    app: crm-notification-service
+  ports:
+    - port: 8086
+---
+# ── Analytics Service ─────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-analytics-service
+  namespace: crm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crm-analytics-service
+  template:
+    metadata:
+      labels:
+        app: crm-analytics-service
+    spec:
+      containers:
+        - name: analytics-service
+          image: ghcr.io/YOUR_ORG/crm-analytics-service:latest
+          ports:
+            - containerPort: 8087
+          envFrom:
+            - configMapRef: { name: crm-config }
+            - secretRef: { name: crm-secrets }
+          readinessProbe:
+            httpGet: { path: /actuator/health, port: 8087 }
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 200m, memory: 256Mi }
+            limits:   { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-analytics-service
+  namespace: crm
+spec:
+  selector:
+    app: crm-analytics-service
+  ports:
+    - port: 8087
+---
+# ── AI Service ────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-ai-service
+  namespace: crm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crm-ai-service
+  template:
+    metadata:
+      labels:
+        app: crm-ai-service
+    spec:
+      containers:
+        - name: ai-service
+          image: ghcr.io/YOUR_ORG/crm-ai-service:latest
+          ports:
+            - containerPort: 8088
+          envFrom:
+            - configMapRef: { name: crm-config }
+          env:
+            - name: GENERATION_MODEL
+              value: microsoft/phi-2
+            - name: SENTIMENT_MODEL
+              value: distilbert-base-uncased-finetuned-sst-2-english
+            - name: EMBEDDING_MODEL
+              value: sentence-transformers/all-MiniLM-L6-v2
+            - name: DEVICE
+              value: auto
+            - name: HF_CACHE_DIR
+              value: /tmp/hf_cache
+          readinessProbe:
+            httpGet: { path: /actuator/health, port: 8088 }
+            initialDelaySeconds: 120
+            periodSeconds: 15
+          resources:
+            requests: { cpu: 500m, memory: 2Gi }
+            limits:   { cpu: 2000m, memory: 4Gi }
+          volumeMounts:
+            - name: hf-cache
+              mountPath: /tmp/hf_cache
+      volumes:
+        - name: hf-cache
+          persistentVolumeClaim:
+            claimName: hf-cache-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-ai-service
+  namespace: crm
+spec:
+  selector:
+    app: crm-ai-service
+  ports:
+    - port: 8088
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: hf-cache-pvc
+  namespace: crm
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 20Gi
+---
+# ── API Gateway ───────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crm-api-gateway
+  namespace: crm
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: crm-api-gateway
+  template:
+    metadata:
+      labels:
+        app: crm-api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: ghcr.io/YOUR_ORG/crm-api-gateway:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef: { name: crm-config }
+            - secretRef: { name: crm-secrets }
+          readinessProbe:
+            httpGet: { path: /actuator/health, port: 8080 }
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          resources:
+            requests: { cpu: 200m, memory: 256Mi }
+            limits:   { cpu: 500m, memory: 512Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: crm-api-gateway
+  namespace: crm
+spec:
+  selector:
+    app: crm-api-gateway
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
